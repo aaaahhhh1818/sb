@@ -16,11 +16,13 @@ public class ReplyServiceTests {
     @Test
     public void testList() {
 
-        Long bno = 196L;
+        Long bno = 198L;
 
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(-1)
+                .build();
 
-        replyService.getListOfBoard(bno, pageRequestDTO);
+        log.info(replyService.getListOfBoard(bno, pageRequestDTO));
 
 
     }

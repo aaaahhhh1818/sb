@@ -4,10 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.zerock.sb.entity.Board;
 import org.zerock.sb.entity.Reply;
 
@@ -26,7 +23,7 @@ public class ReplyRepositoryTests {
 
         IntStream.rangeClosed(1, 200).forEach(i -> {
 
-            Long bno = (long)(200 - (i % 5)); //200,199,198,197,196
+            Long bno = (long) (200 - (i % 5)); //200,199,198,197,196
 
             int replyCount = (i % 5); //0,1,2,3,4
 
@@ -75,7 +72,7 @@ public class ReplyRepositoryTests {
     public void testListOfBoard() {
 
         Pageable pageable =
-                PageRequest.of(0,10, Sort.by("rno").descending());
+                PageRequest.of(0, 10, Sort.by("rno").descending());
 
         Page<Reply> result = replyRepository.getListByBno(197L, pageable);
 
@@ -84,4 +81,36 @@ public class ReplyRepositoryTests {
         result.get().forEach(reply -> log.info(reply));
 
     }
+
+    @Test
+    public void testCountOfBoard() {
+
+        Long bno = 198L;
+
+        //120
+        int count = replyRepository.getReplyCountOfBoard(bno);
+
+        int lastPage = (int)(Math.ceil(count/10.0));
+
+        //무플 처리
+        if(lastPage == 0) {
+            lastPage = 1;
+        }
+
+        //0부터 시작하는 페이지 번호, 사이즈, 소트(소트 안줘도 asc로 정렬됨)
+        Pageable pageable = PageRequest.of(lastPage -1, 10);
+        //얘 써도됨
+        //Pageable pageable = PageRequest.of(lastPage <= 0 ? 0 : lastPage -1, 10);
+
+        Page<Reply> result = replyRepository.getListByBno(bno, pageable);
+
+        log.info("total: " + result.getTotalElements());
+        log.info("..." + result.getTotalPages());
+
+        result.get().forEach(reply -> {
+            log.info(reply);
+        });
+
+    }
+
 }
