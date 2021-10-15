@@ -69,6 +69,26 @@ public class ReplyServiceImpl implements ReplyService {
         return reply.getRno();
     }
 
+    @Override
+    public PageResponseDTO<ReplyDTO> remove(Long bno, Long rno, PageRequestDTO pageRequestDTO) {
+
+        replyRepository.deleteById(rno);
+
+        return getListOfBoard(bno, pageRequestDTO);
+    }
+
+    @Override
+    public PageResponseDTO<ReplyDTO> modify(ReplyDTO replyDTO, PageRequestDTO pageRequestDTO) {
+
+        Reply reply = replyRepository.findById(replyDTO.getRno()).orElseThrow(); //orElseThrow 없으면 RunTimeException 발생
+
+        reply.setText(replyDTO.getReplyText());
+
+        replyRepository.save(reply);
+
+        return getListOfBoard(replyDTO.getBno(), pageRequestDTO);
+    }
+
     private int calcLastPage(Long bno, double size) {
 
         int count = replyRepository.getReplyCountOfBoard(bno);

@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.zerock.sb.dto.PageRequestDTO;
 import org.zerock.sb.dto.PageResponseDTO;
 import org.zerock.sb.dto.ReplyDTO;
+import org.zerock.sb.entity.Reply;
 
 @Transactional
 public interface ReplyService {
@@ -11,5 +12,9 @@ public interface ReplyService {
     PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO);
 
     Long register(ReplyDTO replyDTO);
+
+    PageResponseDTO<ReplyDTO> remove(Long bno, Long rno, PageRequestDTO pageRequestDTO);
+
+    PageResponseDTO<ReplyDTO> modify(ReplyDTO replyDTO, PageRequestDTO pageRequestDTO);
 
 }

@@ -36,4 +36,27 @@ public class ReplyController {
 
     }
 
+    @DeleteMapping("/{bno}/{rno}")
+    public PageResponseDTO<ReplyDTO> remove(
+            @PathVariable("bno") Long bno,
+            @PathVariable("rno") Long rno,
+            PageRequestDTO pageRequestDTO){
+
+        return replyService.remove(bno,rno,pageRequestDTO);
+    }
+
+    @PutMapping("/{bno}/{rno}")
+    public PageResponseDTO<ReplyDTO> modify(
+            @PathVariable("bno") Long bno,
+            @PathVariable("rno") Long rno,
+            @RequestBody ReplyDTO replyDTO,
+            PageRequestDTO pageRequestDTO){
+
+        log.info("bno: " + bno);
+        log.info("rno: " + rno);
+        log.info("replyDTO: " + replyDTO);
+
+        return replyService.modify(replyDTO, pageRequestDTO);
+    }
+
 }
