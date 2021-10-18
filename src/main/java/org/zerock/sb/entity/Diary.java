@@ -1,19 +1,23 @@
 package org.zerock.sb.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(exclude = {"tags", "pictures"})
+@Table(name = "tbl_diary")
 public class Diary {
 
     @Id
@@ -33,7 +37,18 @@ public class Diary {
     private LocalDateTime modDate;
 
     //해시태그
-    @ElementCollection
-    private List<String> tags;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "tbl_diary_tag")
+    @Fetch(value = FetchMode.JOIN)
+    @BatchSize(size = 50)
+    @Builder.Default
+    private Set<String> tags = new HashSet<>();
+
+    //첨부파일
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "tbl_diary_picture")
+    @Fetch(value = FetchMode.JOIN)
+    @BatchSize(size = 50)
+    private Set<DiaryPicture> pictures;
 
 }

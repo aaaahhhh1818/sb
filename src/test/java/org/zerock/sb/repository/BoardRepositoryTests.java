@@ -12,8 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.sb.dto.BoardDTO;
 import org.zerock.sb.entity.Board;
+import org.zerock.sb.entity.Diary;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @SpringBootTest
 @Log4j2
@@ -82,5 +84,6 @@ public class BoardRepositoryTests {
         });
 
     }
+
 
 }
