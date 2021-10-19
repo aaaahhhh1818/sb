@@ -4,9 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.sb.dto.DiaryDTO;
 import org.zerock.sb.dto.DiaryPictureDTO;
+import org.zerock.sb.dto.PageRequestDTO;
+import org.zerock.sb.dto.PageResponseDTO;
 import org.zerock.sb.entity.DiaryPicture;
 
 import java.util.List;
@@ -52,13 +55,32 @@ public class DiaryServiceTests {
     @Test
     public void testRead() {
 
-        Long dno = 101L;
+        Long dno = 202L;
 
         DiaryDTO dto = diaryService.read(dno);
 
         log.info(dto.getPictures().size());
 
         dto.getPictures().forEach(diaryPictureDTO -> log.info(diaryPictureDTO));
+
+    }
+
+    @Test
+    public void testList() {
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
+
+        PageResponseDTO<DiaryDTO> responseDTO
+                = diaryService.getList(pageRequestDTO);
+
+        log.info(responseDTO);
+
+        responseDTO.getDtoList().forEach(diaryDTO -> {
+            log.info(diaryDTO);
+            log.info(diaryDTO.getTags());
+            log.info(diaryDTO.getPictures());
+            log.info("---------------------------");
+        });
 
     }
 
