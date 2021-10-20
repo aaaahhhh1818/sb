@@ -53,6 +53,7 @@
             <tr th:each="board:${res.dtoList}">
                 <th scope="row">[[${board.dno}]]</th>
                 <td><a th:href="|javascript:movePage(${res.page}, ${board.dno} )|">[[${board.title}]]</a>
+                    <h4>Favorite Score [[${board.totalScore}]]</h4>
                     <div class="pictureDiv">
                         <img th:each="picture:${board.pictures}" th:src="|@{/display(fileName=${picture.getLink()})}|">
                     </div>
@@ -143,9 +144,9 @@
             }
 
             if(dno) {
-                uri = `/board/read?dno=${dno}&page=${page}` + searchQuery
+                uri = `/diary/read?dno=${dno}&page=${page}` + searchQuery
             }else {
-                uri = `/board/list?page=${page}` + searchQuery
+                uri = `/diary/list?page=${page}` + searchQuery
             }
             self.location = uri
         }
@@ -159,7 +160,7 @@
 
             console.log("type", type, "keyword", keyword)
 
-            self.location =`/board/list?page=1&type=${type}&keyword=${keyword}`
+            self.location =`/diary/list?page=1&type=${type}&keyword=${keyword}`
         }
 
     </script>

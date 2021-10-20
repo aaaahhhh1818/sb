@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.zerock.sb.dto.DiaryDTO;
+import org.zerock.sb.dto.DiaryListDTO;
 import org.zerock.sb.dto.PageRequestDTO;
 import org.zerock.sb.dto.PageResponseDTO;
 import org.zerock.sb.entity.Diary;
@@ -68,6 +69,40 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<DiaryDTO> dtoList
                 = result.get().map(diary -> modelMapper.map(diary, DiaryDTO.class)).collect(Collectors.toList());
+
+        return new PageResponseDTO<>(pageRequestDTO, (int)totalCount, dtoList);
+    }
+
+    @Override
+    public PageResponseDTO<DiaryListDTO> getListWithFavorite(PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(
+                pageRequestDTO.getPage() - 1,
+                pageRequestDTO.getSize(),
+                Sort.by("dno").descending());
+
+        Page<Object[]> result = diaryRepository.findWithFavoriteCount(pageable);
+
+        long totalCount = result.getTotalElements();
+
+        //변환해서 가져오기
+        List<DiaryListDTO> dtoList = result.get().map(objects -> {
+           Object[] arr = (Object[])objects;
+           Diary diary = (Diary)arr[0];
+           long totalScore = (long)arr[1];
+
+           //log.info("--------------------------");
+           //log.info(diary);
+           //log.info(totalScore);
+
+           DiaryListDTO diaryListDTO = modelMapper.map(diary, DiaryListDTO.class);
+           diaryListDTO.setTotalScore((int)totalScore);
+
+           //log.info(diaryListDTO);
+           //log.info("=========================");
+
+           return diaryListDTO;
+        }).collect(Collectors.toList());
 
         return new PageResponseDTO<>(pageRequestDTO, (int)totalCount, dtoList);
     }
