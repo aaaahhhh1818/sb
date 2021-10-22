@@ -24,5 +24,10 @@ public class Member {
     private String mname;
 
     @ElementCollection(fetch = FetchType.LAZY)
+    //@Builder.Default
     private Set<MemberRole> roleSet;
+
+    public void changePassword(String password) {
+        this.mpw = password;
+    }
 }
